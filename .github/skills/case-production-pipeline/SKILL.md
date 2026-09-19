@@ -148,6 +148,15 @@ For `NEW CASE`:
 - Missing authoritative dependency: block; do not substitute.
 - V3 required: stop and require explicit user approval of actual rendered V2 Masters.
 
+## Infrastructure separation
+
+When a routing, handoff, authority registry, scoped-gate, backend, Synthetic, or governance issue blocks progress, separate case work from Factory infrastructure work.
+
+- A technical PASS for an artifact or audit is not automatically a PASS for the gate.
+- A routing, handoff, or backend issue must not trigger canon, logic, content, or visual repair when those artifacts have already passed their required audit.
+- If the only blocker is infrastructure, preserve the current case gate as `PENDING/BLOCKED` and state that the artifact may be technically validated without formal promotion.
+- Infrastructure tasks must never be described as a case gate, visual gate, or `PRODUCTION_STATE` advancement.
+
 ## Handoffs
 
 All cross-agent transfers must conform to `06_HANDOFF_PROTOCOL_v1.2.md`, including exact authoritative inputs, delivery status, immutable facts, proposal scope, reveal ceiling, expected outputs, acceptance tests, risks, and return destination.
@@ -163,6 +172,11 @@ Return:
 - skill-level audits run and verdicts;
 - setpoints activated/staled;
 - unresolved issues;
-- exact next routed task.
+- `CASE NEXT TASK:`;
+- `FACTORY INFRASTRUCTURE TASK:`.
+
+`CASE NEXT TASK:` must state the next case-level action required for legitimate advancement. If infrastructure blocks that action, identify the dependency/blocker but keep the actual infrastructure work exclusively under `FACTORY INFRASTRUCTURE TASK:`.
+
+`FACTORY INFRASTRUCTURE TASK:` must state required Synthetic, backend, governance, handoff, gate, scoped-gate, authority registry, or authority-plumbing work. Use `N/A` when no infrastructure work is required. Never let this field imply case-gate advancement or `PRODUCTION_STATE` promotion.
 
 Never claim advancement unless the authoritative production state was legitimately eligible to advance.
