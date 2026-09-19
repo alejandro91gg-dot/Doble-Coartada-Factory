@@ -1,0 +1,20 @@
+# Secrets and local configuration
+.env
+.env.*
+*.key
+*.pem
+
+# Dependencies and generated output
+node_modules/
+coverage/
+test-results/
+
+# Recovery material is preserved on disk and hash-inventoried in baselines/
+tmp/
+recovery-delivery/
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
+.vscode/
+

@@ -1,0 +1,55 @@
+{
+  "captured_at": "2026-09-19",
+  "project_ref": "hquaviunbwghkxojndgj",
+  "functions": [
+    {
+      "id": "1d90532f-f3d3-4c0c-b21c-7b6a5a43487b",
+      "slug": "factory-api",
+      "name": "factory-api",
+      "status": "ACTIVE",
+      "version": 2,
+      "created_at": 1789328134797,
+      "updated_at": 1789328944041,
+      "verify_jwt": false,
+      "import_map": true,
+      "ezbr_sha256": "311011b915d81973caaf806d0e06720efc9a5a07fdb0fc76575a947a023020f4"
+    },
+    {
+      "id": "1b8ad4b5-306b-428f-b0bc-c485ce5d9a48",
+      "slug": "factory-api-v13",
+      "name": "factory-api-v13",
+      "status": "ACTIVE",
+      "version": 2,
+      "created_at": 1789337767711,
+      "updated_at": 1789506905972,
+      "verify_jwt": false,
+      "import_map": true,
+      "ezbr_sha256": "c9de79cfe75710b3c1e9cc04bdb412fe1570a23eb44bfc0e66aff6917777af6c"
+    },
+    {
+      "id": "7e06ab4f-eead-4687-a822-4432e00c11c1",
+      "slug": "factory-api-v14",
+      "name": "factory-api-v14",
+      "status": "ACTIVE",
+      "version": 2,
+      "created_at": 1789340781258,
+      "updated_at": 1789470637877,
+      "verify_jwt": false,
+      "import_map": true,
+      "ezbr_sha256": "f445e5ab81bce9eec0dd8fbc51ebf83f9e35b3c387db85c37681d25d61d172ad"
+    },
+    {
+      "id": "998dafd6-580b-421d-8470-4b96d4df0bfc",
+      "slug": "factory-api-premium",
+      "name": "factory-api-premium",
+      "status": "ACTIVE",
+      "version": 5,
+      "created_at": 1789374282438,
+      "updated_at": 1789490916761,
+      "verify_jwt": false,
+      "import_map": true,
+      "ezbr_sha256": "b73ad1755a92d1d4f76c11ebedcfb22fceb310907ebf88a643bdda93a5632b4a"
+    }
+  ]
+}
+

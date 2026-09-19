@@ -1,0 +1,38 @@
+{
+  "captured_at": "2026-09-19",
+  "comparisons": [
+    {
+      "slug": "factory-api-v13",
+      "local_path": "edge-functions/factory-api-v13/index.ts",
+      "local_sha256": "867465F56B335AF2C5711724009FE82D84EC3425F8D321100F8B1F69FCC074EC",
+      "deployed_path": "baselines/production/2026-09-19/edge-functions/factory-api-v13/index.ts",
+      "deployed_sha256": "CAEB44FEB070B21118D6DB6D64E3F77E8F9FC70B6B545B9CA0DF310FCE4021FB",
+      "matches": false
+    },
+    {
+      "slug": "factory-api-v14",
+      "local_path": "edge-functions/factory-api-v14/index.ts",
+      "local_sha256": "204F29F0F2E2AD2D6459928E1DF36F3D1FDB66C887A81A4FA557AC47D9903CED",
+      "deployed_path": "baselines/production/2026-09-19/edge-functions/factory-api-v14/index.ts",
+      "deployed_sha256": "331DEFA4CE09D123684F1197F107064CD44EF472604A92D2CA8347CA3AE7EA55",
+      "matches": false
+    },
+    {
+      "slug": "factory-api-premium",
+      "local_path": "edge-functions/factory-api-premium/index.ts",
+      "local_sha256": "C26DA548B85175EF671070D76E32E6535A1F58DB1E98CB3409F671980E6DD335",
+      "deployed_path": "baselines/production/2026-09-19/edge-functions/factory-api-premium/index.ts",
+      "deployed_sha256": "9E50ED60BD8DC231029B4970D64F68CD6111C97BDFD4968AA30E0145923A8571",
+      "matches": false
+    },
+    {
+      "slug": "factory-api",
+      "local_path": null,
+      "local_sha256": null,
+      "deployed_path": "baselines/production/2026-09-19/edge-functions/factory-api/index.ts",
+      "deployed_sha256": "6FA7E70159CD2555112E7D14B3588F22E4944005532EDE08D6B9962A27F331D7",
+      "matches": false
+    }
+  ]
+}
+

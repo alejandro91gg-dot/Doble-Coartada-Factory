@@ -1,0 +1,66 @@
+{
+  "captured_at": "2026-09-19",
+  "files": [
+    {
+      "path": "CODEX_FACTORY_CURRENT_STATE_AUDIT_v1.0.md",
+      "bytes": 7275,
+      "sha256": "3D995A75110F1BD56B081949072380690ED41EA28D2413C1E58D9C35F791FD5D"
+    },
+    {
+      "path": "CODEX_FACTORY_GAP_MATRIX_v1.0.json",
+      "bytes": 8102,
+      "sha256": "5ECA6F9EF35B8B9013DD09051A01F9888ED611BD5AC3ECE650D3DC90845C02F6"
+    },
+    {
+      "path": "CODEX_FACTORY_MIGRATION_PLAN_v1.0.md",
+      "bytes": 6501,
+      "sha256": "269CEA343011FECE55EEE317716424E9770A9DAC818211510D406B84D9F3B6E1"
+    },
+    {
+      "path": "CODEX_FACTORY_TARGET_ARCHITECTURE_v1.0.md",
+      "bytes": 5394,
+      "sha256": "AAA53A3EA7DFC8931862ACD8C50A3AFFFD419EBD22C56878B430EA292C1D6F99"
+    },
+    {
+      "path": "CODEX_RETURN_TO_A0_REORIENTATION_v1.0.md",
+      "bytes": 3798,
+      "sha256": "2582FBDA5B7CCF99EE01F6B5B04C5E7750C084D4F0FAFBA951FB5F2507AE8274"
+    },
+    {
+      "path": "edge-functions\\factory-api-premium\\deno.json",
+      "bytes": 36,
+      "sha256": "671920F9E86E8620695B89C0328206CB79C2AE66DD7BF466A0644E20D1CFD9F1"
+    },
+    {
+      "path": "edge-functions\\factory-api-premium\\index.ts",
+      "bytes": 19174,
+      "sha256": "C26DA548B85175EF671070D76E32E6535A1F58DB1E98CB3409F671980E6DD335"
+    },
+    {
+      "path": "edge-functions\\factory-api-v13\\deno.json",
+      "bytes": 36,
+      "sha256": "671920F9E86E8620695B89C0328206CB79C2AE66DD7BF466A0644E20D1CFD9F1"
+    },
+    {
+      "path": "edge-functions\\factory-api-v13\\index.ts",
+      "bytes": 8889,
+      "sha256": "867465F56B335AF2C5711724009FE82D84EC3425F8D321100F8B1F69FCC074EC"
+    },
+    {
+      "path": "edge-functions\\factory-api-v14\\deno.json",
+      "bytes": 37,
+      "sha256": "194FC42F477469CB4E72F3373A06B125CF374D9B733F74FEA3D680AFEF697DEC"
+    },
+    {
+      "path": "edge-functions\\factory-api-v14\\index.ts",
+      "bytes": 14298,
+      "sha256": "204F29F0F2E2AD2D6459928E1DF36F3D1FDB66C887A81A4FA557AC47D9903CED"
+    },
+    {
+      "path": "edge-functions\\migrations\\20260916_atomic_authority_set_register.sql",
+      "bytes": 9680,
+      "sha256": "AE0960502015FBCCF6E394F778BC5623EF361B010A4616514A81CFB75BEC65B3"
+    }
+  ]
+}
+

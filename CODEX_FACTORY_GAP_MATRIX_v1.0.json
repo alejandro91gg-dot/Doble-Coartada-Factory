@@ -1,0 +1,150 @@
+{
+  "schema_version": "1.0",
+  "observed_at": "2026-09-19",
+  "entries": [
+    {
+      "current_component": "factory_authority_records + factory_authority_current",
+      "current_status": "Implemented; DC-001 has one authoritative v5.0 triplet; DC-002 has none",
+      "target_component": "Atomic three-domain CASE AUTHORITY feeding a versioned CASE CORE",
+      "gap": "No explicit case-core projection or lineage object",
+      "risk": "HIGH",
+      "recommended_action": "Add a non-authority case-core manifest referencing the exact three authority IDs",
+      "authority_required": "A0 for semantic model and any authority transition"
+    },
+    {
+      "current_component": "factory_cases",
+      "current_status": "Case-wide state only",
+      "target_component": "Case plus ECONOMICO, ESTANDAR and PREMIUM edition profiles",
+      "gap": "No edition representation",
+      "risk": "CRITICAL",
+      "recommended_action": "Add versioned edition profiles with inclusion, transformation, physical, visual and audio fields",
+      "authority_required": "A0"
+    },
+    {
+      "current_component": "Case-level release/gates",
+      "current_status": "No edition release records; G12 is not SKU-scoped",
+      "target_component": "Immutable SKU RELEASE per edition",
+      "gap": "One edition could be mistaken for all-edition release",
+      "risk": "CRITICAL",
+      "recommended_action": "Create per-edition release manifests and A0 approval transition",
+      "authority_required": "A0"
+    },
+    {
+      "current_component": "factory_gate_records",
+      "current_status": "Append-only generic rows with metadata",
+      "target_component": "Scoped gate runs with prerequisites and derived current status",
+      "gap": "No shared/visual/edition/audio scope or dependency enforcement",
+      "risk": "HIGH",
+      "recommended_action": "Add scoped gate-run model and projection without rewriting history",
+      "authority_required": "A0 for legacy mapping"
+    },
+    {
+      "current_component": "factory_handoffs",
+      "current_status": "Protocol fields mostly embedded in generic payload; stale open statuses exist",
+      "target_component": "Protocol 1.2 validated delivery manifest and lifecycle",
+      "gap": "Named-equals-delivered and readiness are not machine-enforced",
+      "risk": "HIGH",
+      "recommended_action": "Normalize manifests, hashes, acceptance tests and completion linkage",
+      "authority_required": "A0"
+    },
+    {
+      "current_component": "factory_documents",
+      "current_status": "Generic documents; DC-002 count is zero",
+      "target_component": "Typed immutable production artifacts with authority and edition lineage",
+      "gap": "Operational work can exist only in conversations/returns",
+      "risk": "CRITICAL",
+      "recommended_action": "Add typed artifact records and safely ingest DC-002 non-authoritative sources",
+      "authority_required": "A0 for source designation; none for read-only inventory"
+    },
+    {
+      "current_component": "Visual governance documents",
+      "current_status": "Documented only; registry says all families not started",
+      "target_component": "VISUAL_SYSTEM_REGISTRY, Golden Masters, V3 locks and V4 kits",
+      "gap": "No reproducible visual authority/lineage backend",
+      "risk": "CRITICAL",
+      "recommended_action": "Implement registry/family/master/component schema and lock workflow",
+      "authority_required": "User for V3; A0 for locks"
+    },
+    {
+      "current_component": "Recovered DC-001/DC-002 visuals",
+      "current_status": "Legacy packages and audit evidence",
+      "target_component": "Mapped legacy artifacts or verified v2.0 masters",
+      "gap": "Legacy renders can be confused with series masters",
+      "risk": "HIGH",
+      "recommended_action": "Classify as LEGACY or VISUAL DRAFT; require explicit migration and fresh audit",
+      "authority_required": "A0; user if V3 candidate"
+    },
+    {
+      "current_component": "DC-002 voice lock and audio work",
+      "current_status": "Package/return history only; no shared documents or audio schema",
+      "target_component": "Canonical-to-TTS-to-audio-to-ASR-to-QA lineage",
+      "gap": "Locked voices and QA results are not synchronized backend objects",
+      "risk": "CRITICAL",
+      "recommended_action": "Import exact lock/spec files as non-authoritative artifacts, then implement audio lineage",
+      "authority_required": "A0; voice mutation forbidden"
+    },
+    {
+      "current_component": "Audio QA v1.0 assumptions",
+      "current_status": "Global similarity and number-count logic documented as obsolete",
+      "target_component": "Segmented local critical-phrase QA with reuse-first retry policy",
+      "gap": "Comparator false positives can waste generation credits",
+      "risk": "HIGH",
+      "recommended_action": "Implement QA v1.1 tests before any further generation",
+      "authority_required": "A0 for production resumption"
+    },
+    {
+      "current_component": "Edition audio policy",
+      "current_status": "Not represented in schema",
+      "target_component": "audio_required_for_solution=false for all editions",
+      "gap": "Unique audio evidence is not mechanically prevented",
+      "risk": "CRITICAL",
+      "recommended_action": "Add constraints and non-audio solution-path verification per edition",
+      "authority_required": "A0"
+    },
+    {
+      "current_component": "Local/deployed API",
+      "current_status": "Local v14 1.4.2/Premium 2.0.3; Production v14 1.4.1/Premium 2.0.2",
+      "target_component": "One source-controlled canonical gateway and matching release registry",
+      "gap": "Deployment drift and deployed-only base API source",
+      "risk": "HIGH",
+      "recommended_action": "Capture deployed source, establish Git baseline and reconcile release metadata",
+      "authority_required": "A0 for canonical baseline; technical deployment approval"
+    },
+    {
+      "current_component": "Atomic staged-register experiment",
+      "current_status": "Present locally and in Synthetic only; unverified E2E; absent from Production",
+      "target_component": "Governed, tested idempotent registration compatible with v2.0 model",
+      "gap": "Pre-reorientation implementation lacks accepted architecture and completed tests",
+      "risk": "HIGH",
+      "recommended_action": "Quarantine until fresh governance decision; redesign tests within migration plan",
+      "authority_required": "Fresh S0/A0 decision"
+    },
+    {
+      "current_component": "Security controls",
+      "current_status": "RLS enabled; SECURITY DEFINER execute revoked from public client roles",
+      "target_component": "Same controls plus advisors and explicit Data API grants",
+      "gap": "No recorded advisor baseline; future Data API exposure behavior changes",
+      "risk": "MEDIUM",
+      "recommended_action": "Run advisors and document grants before schema rollout",
+      "authority_required": "Technical operator within approved migration"
+    },
+    {
+      "current_component": "Repository/testing",
+      "current_status": "No .git, test suite, CI or root deployment config",
+      "target_component": "Reproducible migrations, contract tests and rollbackable releases",
+      "gap": "Changes cannot be reliably reviewed or reproduced",
+      "risk": "CRITICAL",
+      "recommended_action": "Create canonical repository baseline and Synthetic contract/regression suite",
+      "authority_required": "A0 to designate canonical repository"
+    },
+    {
+      "current_component": "Root AGENTS.md and S0 routing",
+      "current_status": "Case-specific DC-001 brief assigns S0 supervision and omits A2 from its primary model",
+      "target_component": "Constitution v2.0 role model with A0 as authority governor and explicit A1-A4 boundaries",
+      "gap": "S0/A0 authority boundary and active operator instructions conflict",
+      "risk": "HIGH",
+      "recommended_action": "A0 defines S0's v2.0 role, then replace the root brief with a repository-wide guide and archive the old routing state",
+      "authority_required": "A0"
+    }
+  ]
+}

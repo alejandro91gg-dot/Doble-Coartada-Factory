@@ -1,0 +1,2878 @@
+{
+  "tables": [
+    {
+      "columns": [
+        {
+          "udt": "uuid",
+          "name": "id",
+          "type": "uuid",
+          "default": "gen_random_uuid()",
+          "nullable": "NO"
+        },
+        {
+          "udt": "text",
+          "name": "agent_code",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "udt": "text",
+          "name": "label",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "udt": "text",
+          "name": "key_hash",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "udt": "text",
+          "name": "key_prefix",
+          "type": "text",
+          "default": null,
+          "nullable": "YES"
+        },
+        {
+          "udt": "bool",
+          "name": "active",
+          "type": "boolean",
+          "default": "true",
+          "nullable": "NO"
+        },
+        {
+          "udt": "timestamptz",
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "now()",
+          "nullable": "NO"
+        },
+        {
+          "udt": "timestamptz",
+          "name": "last_used_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "nullable": "YES"
+        },
+        {
+          "udt": "timestamptz",
+          "name": "revoked_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "nullable": "YES"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "factory_agent_credentials_agent_idx",
+          "definition": "CREATE INDEX factory_agent_credentials_agent_idx ON public.factory_agent_credentials USING btree (agent_code)"
+        },
+        {
+          "name": "factory_agent_credentials_key_hash_key",
+          "definition": "CREATE UNIQUE INDEX factory_agent_credentials_key_hash_key ON public.factory_agent_credentials USING btree (key_hash)"
+        },
+        {
+          "name": "factory_agent_credentials_pkey",
+          "definition": "CREATE UNIQUE INDEX factory_agent_credentials_pkey ON public.factory_agent_credentials USING btree (id)"
+        }
+      ],
+      "table_name": "factory_agent_credentials",
+      "constraints": [
+        {
+          "name": "factory_agent_credentials_agent_code_fkey",
+          "type": "f",
+          "definition": "FOREIGN KEY (agent_code) REFERENCES factory_agents(agent_code) ON DELETE CASCADE"
+        },
+        {
+          "name": "factory_agent_credentials_hash",
+          "type": "c",
+          "definition": "CHECK ((key_hash ~ '^[A-Fa-f0-9]{64}$'::text))"
+        },
+        {
+          "name": "factory_agent_credentials_key_hash_key",
+          "type": "u",
+          "definition": "UNIQUE (key_hash)"
+        },
+        {
+          "name": "factory_agent_credentials_pkey",
+          "type": "p",
+          "definition": "PRIMARY KEY (id)"
+        }
+      ],
+      "rls_enabled": true
+    },
+    {
+      "columns": [
+        {
+          "udt": "uuid",
+          "name": "id",
+          "type": "uuid",
+          "default": "gen_random_uuid()",
+          "nullable": "NO"
+        },
+        {
+          "udt": "text",
+          "name": "return_id",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "udt": "text",
+          "name": "case_code",
+          "type": "text",
+          "default": null,
+          "nullable": "YES"
+        },
+        {
+          "udt": "text",
+          "name": "agent_code",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "udt": "uuid",
+          "name": "related_handoff_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "YES"
+        },
+        {
+          "udt": "text",
+          "name": "verdict",
+          "type": "text",
+          "default": null,
+          "nullable": "YES"
+        },
+        {
+          "udt": "text",
+          "name": "content_text",
+          "type": "text",
+          "default": null,
+          "nullable": "YES"
+        },
+        {
+          "udt": "text",
+          "name": "artifact_path",
+          "type": "text",
+          "default": null,
+          "nullable": "YES"
+        },
+        {
+          "udt": "text",
+          "name": "sha256",
+          "type": "text",
+          "default": null,
+          "nullable": "YES"
+        },
+        {
+          "udt": "jsonb",
+          "name": "metadata",
+          "type": "jsonb",
+          "default": "'{}'::jsonb",
+          "nullable": "NO"
+        },
+        {
+          "udt": "timestamptz",
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "now()",
+          "nullable": "NO"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "factory_agent_returns_agent_idx",
+          "definition": "CREATE INDEX factory_agent_returns_agent_idx ON public.factory_agent_returns USING btree (agent_code)"
+        },
+        {
+          "name": "factory_agent_returns_case_idx",
+          "definition": "CREATE INDEX factory_agent_returns_case_idx ON public.factory_agent_returns USING btree (case_code, created_at DESC)"
+        },
+        {
+          "name": "factory_agent_returns_handoff_idx",
+          "definition": "CREATE INDEX factory_agent_returns_handoff_idx ON public.factory_agent_returns USING btree (related_handoff_id)"
+        },
+        {
+          "name": "factory_agent_returns_pkey",
+          "definition": "CREATE UNIQUE INDEX factory_agent_returns_pkey ON public.factory_agent_returns USING btree (id)"
+        },
+        {
+          "name": "factory_agent_returns_return_id_key",
+          "definition": "CREATE UNIQUE INDEX factory_agent_returns_return_id_key ON public.factory_agent_returns USING btree (return_id)"
+        }
+      ],
+      "table_name": "factory_agent_returns",
+      "constraints": [
+        {
+          "name": "factory_agent_returns_agent_code_fkey",
+          "type": "f",
+          "definition": "FOREIGN KEY (agent_code) REFERENCES factory_agents(agent_code)"
+        },
+        {
+          "name": "factory_agent_returns_case_code_fkey",
+          "type": "f",
+          "definition": "FOREIGN KEY (case_code) REFERENCES factory_cases(case_code) ON DELETE CASCADE"
+        },
+        {
+          "name": "factory_agent_returns_pkey",
+          "type": "p",
+          "definition": "PRIMARY KEY (id)"
+        },
+        {
+          "name": "factory_agent_returns_related_handoff_id_fkey",
+          "type": "f",
+          "definition": "FOREIGN KEY (related_handoff_id) REFERENCES factory_handoffs(id) ON DELETE SET NULL"
+        },
+        {
+          "name": "factory_agent_returns_return_id_key",
+          "type": "u",
+          "definition": "UNIQUE (return_id)"
+        },
+        {
+          "name": "factory_agent_returns_sha",
+          "type": "c",
+          "definition": "CHECK (((sha256 IS NULL) OR (sha256 ~ '^[A-Fa-f0-9]{64}$'::text)))"
+        }
+      ],
+      "rls_enabled": true
+    },
+    {
+      "columns": [
+        {
+          "udt": "text",
+          "name": "agent_code",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "udt": "text",
+          "name": "display_name",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "udt": "jsonb",
+          "name": "capabilities",
+          "type": "jsonb",
+          "default": "'[]'::jsonb",
+          "nullable": "NO"
+        },
+        {
+          "udt": "bool",
+          "name": "active",
+          "type": "boolean",
+          "default": "true",
+          "nullable": "NO"
+        },
+        {
+          "udt": "timestamptz",
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "now()",
+          "nullable": "NO"
+        },
+        {
+          "udt": "timestamptz",
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "default": "now()",
+          "nullable": "NO"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "factory_agents_pkey",
+          "definition": "CREATE UNIQUE INDEX factory_agents_pkey ON public.factory_agents USING btree (agent_code)"
+        }
+      ],
+      "table_name": "factory_agents",
+      "constraints": [
+        {
+          "name": "factory_agents_capabilities_array",
+          "type": "c",
+          "definition": "CHECK ((jsonb_typeof(capabilities) = 'array'::text))"
+        },
+        {
+          "name": "factory_agents_pkey",
+          "type": "p",
+          "definition": "PRIMARY KEY (agent_code)"
+        }
+      ],
+      "rls_enabled": true
+    },
+    {
+      "columns": [
+        {
+          "udt": "text",
+          "name": "version",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "udt": "text",
+          "name": "gateway",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "udt": "text",
+          "name": "status",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "udt": "text",
+          "name": "package_sha256",
+          "type": "text",
+          "default": null,
+          "nullable": "YES"
+        },
+        {
+          "udt": "text",
+          "name": "edge_sha256",
+          "type": "text",
+          "default": null,
+          "nullable": "YES"
+        },
+        {
+          "udt": "jsonb",
+          "name": "verified_agents",
+          "type": "jsonb",
+          "default": "'[]'::jsonb",
+          "nullable": "NO"
+        },
+        {
+          "udt": "text",
+          "name": "notes",
+          "type": "text",
+          "default": null,
+          "nullable": "YES"
+        },
+        {
+          "udt": "timestamptz",
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "now()",
+          "nullable": "NO"
+        },
+        {
+          "udt": "timestamptz",
+          "name": "validated_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "nullable": "YES"
+        },
+        {
+          "udt": "timestamptz",
+          "name": "frozen_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "nullable": "YES"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "factory_api_releases_pkey",
+          "definition": "CREATE UNIQUE INDEX factory_api_releases_pkey ON public.factory_api_releases USING btree (version)"
+        }
+      ],
+      "table_name": "factory_api_releases",
+      "constraints": [
+        {
+          "name": "factory_api_releases_edge_sha256_check",
+          "type": "c",
+          "definition": "CHECK (((edge_sha256 IS NULL) OR (edge_sha256 ~ '^[a-f0-9]{64}$'::text)))"
+        },
+        {
+          "name": "factory_api_releases_package_sha256_check",
+          "type": "c",
+          "definition": "CHECK (((package_sha256 IS NULL) OR (package_sha256 ~ '^[A-F0-9]{64}$'::text)))"
+        },
+        {
+          "name": "factory_api_releases_pkey",
+          "type": "p",
+          "definition": "PRIMARY KEY (version)"
+        },
+        {
+          "name": "factory_api_releases_status_check",
+          "type": "c",
+          "definition": "CHECK ((status = ANY (ARRAY['deployed'::text, 'validated'::text, 'frozen'::text, 'superseded'::text])))"
+        }
+      ],
+      "rls_enabled": true
+    },
+    {
+      "columns": [
+        {
+          "udt": "int8",
+          "name": "id",
+          "type": "bigint",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "udt": "text",
+          "name": "actor",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "udt": "text",
+          "name": "action",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "udt": "text",
+          "name": "entity_type",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "udt": "text",
+          "name": "entity_id",
+          "type": "text",
+          "default": null,
+          "nullable": "YES"
+        },
+        {
+          "udt": "jsonb",
+          "name": "payload",
+          "type": "jsonb",
+          "default": "'{}'::jsonb",
+          "nullable": "NO"
+        },
+        {
+          "udt": "timestamptz",
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "now()",
+          "nullable": "NO"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "factory_audit_log_pkey",
+          "definition": "CREATE UNIQUE INDEX factory_audit_log_pkey ON public.factory_audit_log USING btree (id)"
+        }
+      ],
+      "table_name": "factory_audit_log",
+      "constraints": [
+        {
+          "name": "factory_audit_log_pkey",
+          "type": "p",
+          "definition": "PRIMARY KEY (id)"
+        }
+      ],
+      "rls_enabled": true
+    },
+    {
+      "columns": [
+        {
+          "udt": "text",
+          "name": "case_code",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "udt": "text",
+          "name": "authority_type",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "udt": "uuid",
+          "name": "authority_record_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "udt": "timestamptz",
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "default": "now()",
+          "nullable": "NO"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "factory_authority_current_authority_record_id_key",
+          "definition": "CREATE UNIQUE INDEX factory_authority_current_authority_record_id_key ON public.factory_authority_current USING btree (authority_record_id)"
+        },
+        {
+          "name": "factory_authority_current_pkey",
+          "definition": "CREATE UNIQUE INDEX factory_authority_current_pkey ON public.factory_authority_current USING btree (case_code, authority_type)"
+        }
+      ],
+      "table_name": "factory_authority_current",
+      "constraints": [
+        {
+          "name": "factory_authority_current_authority_record_id_fkey",
+          "type": "f",
+          "definition": "FOREIGN KEY (authority_record_id) REFERENCES factory_authority_records(id) ON UPDATE CASCADE ON DELETE RESTRICT"
+        },
+        {
+          "name": "factory_authority_current_authority_record_id_key",
+          "type": "u",
+          "definition": "UNIQUE (authority_record_id)"
+        },
+        {
+          "name": "factory_authority_current_authority_type_check",
+          "type": "c",
+          "definition": "CHECK ((authority_type = ANY (ARRAY['CASE_CANON'::text, 'CASE_LOGIC'::text, 'PRODUCTION_STATE'::text])))"
+        },
+        {
+          "name": "factory_authority_current_case_code_fkey",
+          "type": "f",
+          "definition": "FOREIGN KEY (case_code) REFERENCES factory_cases(case_code) ON UPDATE CASCADE ON DELETE RESTRICT"
+        },
+        {
+          "name": "factory_authority_current_pkey",
+          "type": "p",
+          "definition": "PRIMARY KEY (case_code, authority_type)"
+        }
+      ],
+      "rls_enabled": true
+    },
+    {
+      "columns": [
+        {
+          "udt": "uuid",
+          "name": "id",
+          "type": "uuid",
+          "default": "gen_random_uuid()",
+          "nullable": "NO"
+        },
+        {
+          "udt": "text",
+          "name": "authority_id",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "udt": "text",
+          "name": "case_code",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "udt": "text",
+          "name": "authority_type",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "udt": "text",
+          "name": "version",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "udt": "text",
+          "name": "sha256",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "udt": "text",
+          "name": "source_document_key",
+          "type": "text",
+          "default": null,
+          "nullable": "YES"
+        },
+        {
+          "udt": "text",
+          "name": "supporting_gate_id",
+          "type": "text",
+          "default": null,
+          "nullable": "YES"
+        },
+        {
+          "udt": "text",
+          "name": "state",
+          "type": "text",
+          "default": "'staged'::text",
+          "nullable": "NO"
+        },
+        {
+          "udt": "text",
+          "name": "registered_by",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "udt": "text",
+          "name": "validated_by",
+          "type": "text",
+          "default": null,
+          "nullable": "YES"
+        },
+        {
+          "udt": "text",
+          "name": "promoted_by",
+          "type": "text",
+          "default": null,
+          "nullable": "YES"
+        },
+        {
+          "udt": "text",
+          "name": "frozen_by",
+          "type": "text",
+          "default": null,
+          "nullable": "YES"
+        },
+        {
+          "udt": "text",
+          "name": "superseded_by",
+          "type": "text",
+          "default": null,
+          "nullable": "YES"
+        },
+        {
+          "udt": "text",
+          "name": "supersede_reason",
+          "type": "text",
+          "default": null,
+          "nullable": "YES"
+        },
+        {
+          "udt": "jsonb",
+          "name": "metadata",
+          "type": "jsonb",
+          "default": "'{}'::jsonb",
+          "nullable": "NO"
+        },
+        {
+          "udt": "timestamptz",
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "now()",
+          "nullable": "NO"
+        },
+        {
+          "udt": "timestamptz",
+          "name": "validated_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "nullable": "YES"
+        },
+        {
+          "udt": "timestamptz",
+          "name": "promoted_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "nullable": "YES"
+        },
+        {
+          "udt": "timestamptz",
+          "name": "frozen_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "nullable": "YES"
+        },
+        {
+          "udt": "timestamptz",
+          "name": "superseded_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "nullable": "YES"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "factory_authority_records_authority_id_key",
+          "definition": "CREATE UNIQUE INDEX factory_authority_records_authority_id_key ON public.factory_authority_records USING btree (authority_id)"
+        },
+        {
+          "name": "factory_authority_records_case_code_authority_type_version__key",
+          "definition": "CREATE UNIQUE INDEX factory_authority_records_case_code_authority_type_version__key ON public.factory_authority_records USING btree (case_code, authority_type, version, sha256)"
+        },
+        {
+          "name": "factory_authority_records_pkey",
+          "definition": "CREATE UNIQUE INDEX factory_authority_records_pkey ON public.factory_authority_records USING btree (id)"
+        },
+        {
+          "name": "idx_factory_authority_records_case_type",
+          "definition": "CREATE INDEX idx_factory_authority_records_case_type ON public.factory_authority_records USING btree (case_code, authority_type, state)"
+        }
+      ],
+      "table_name": "factory_authority_records",
+      "constraints": [
+        {
+          "name": "factory_authority_records_authority_id_key",
+          "type": "u",
+          "definition": "UNIQUE (authority_id)"
+        },
+        {
+          "name": "factory_authority_records_authority_type_check",
+          "type": "c",
+          "definition": "CHECK ((authority_type = ANY (ARRAY['CASE_CANON'::text, 'CASE_LOGIC'::text, 'PRODUCTION_STATE'::text])))"
+        },
+        {
+          "name": "factory_authority_records_case_code_authority_type_version__key",
+          "type": "u",
+          "definition": "UNIQUE (case_code, authority_type, version, sha256)"
+        },
+        {
+          "name": "factory_authority_records_case_code_fkey",
+          "type": "f",
+          "definition": "FOREIGN KEY (case_code) REFERENCES factory_cases(case_code) ON UPDATE CASCADE ON DELETE RESTRICT"
+        },
+        {
+          "name": "factory_authority_records_frozen_by_fkey",
+          "type": "f",
+          "definition": "FOREIGN KEY (frozen_by) REFERENCES factory_agents(agent_code) ON UPDATE CASCADE ON DELETE RESTRICT"
+        },
+        {
+          "name": "factory_authority_records_pkey",
+          "type": "p",
+          "definition": "PRIMARY KEY (id)"
+        },
+        {
+          "name": "factory_authority_records_promoted_by_fkey",
+          "type": "f",
+          "definition": "FOREIGN KEY (promoted_by) REFERENCES factory_agents(agent_code) ON UPDATE CASCADE ON DELETE RESTRICT"
+        },
+        {
+          "name": "factory_authority_records_registered_by_fkey",
+          "type": "f",
+          "definition": "FOREIGN KEY (registered_by) REFERENCES factory_agents(agent_code) ON UPDATE CASCADE ON DELETE RESTRICT"
+        },
+        {
+          "name": "factory_authority_records_sha256_check",
+          "type": "c",
+          "definition": "CHECK ((sha256 ~ '^[A-F0-9]{64}$'::text))"
+        },
+        {
+          "name": "factory_authority_records_source_document_key_fkey",
+          "type": "f",
+          "definition": "FOREIGN KEY (source_document_key) REFERENCES factory_documents(document_key) ON UPDATE CASCADE ON DELETE RESTRICT"
+        },
+        {
+          "name": "factory_authority_records_state_check",
+          "type": "c",
+          "definition": "CHECK ((state = ANY (ARRAY['staged'::text, 'validated'::text, 'authoritative'::text, 'frozen'::text, 'superseded'::text])))"
+        },
+        {
+          "name": "factory_authority_records_superseded_by_fkey",
+          "type": "f",
+          "definition": "FOREIGN KEY (superseded_by) REFERENCES factory_agents(agent_code) ON UPDATE CASCADE ON DELETE RESTRICT"
+        },
+        {
+          "name": "factory_authority_records_supporting_gate_id_fkey",
+          "type": "f",
+          "definition": "FOREIGN KEY (supporting_gate_id) REFERENCES factory_gate_records(gate_id) ON UPDATE CASCADE ON DELETE RESTRICT"
+        },
+        {
+          "name": "factory_authority_records_validated_by_fkey",
+          "type": "f",
+          "definition": "FOREIGN KEY (validated_by) REFERENCES factory_agents(agent_code) ON UPDATE CASCADE ON DELETE RESTRICT"
+        }
+      ],
+      "rls_enabled": true
+    },
+    {
+      "columns": [
+        {
+          "udt": "int8",
+          "name": "id",
+          "type": "bigint",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "udt": "text",
+          "name": "case_code",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "udt": "text",
+          "name": "sync_id",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "udt": "int4",
+          "name": "sync_rev",
+          "type": "integer",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "udt": "text",
+          "name": "tree_sha256",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "udt": "text",
+          "name": "status",
+          "type": "text",
+          "default": "'staged'::text",
+          "nullable": "NO"
+        },
+        {
+          "udt": "timestamptz",
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "now()",
+          "nullable": "NO"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "factory_case_sync_case_code_sync_id_key",
+          "definition": "CREATE UNIQUE INDEX factory_case_sync_case_code_sync_id_key ON public.factory_case_sync USING btree (case_code, sync_id)"
+        },
+        {
+          "name": "factory_case_sync_case_rev_idx",
+          "definition": "CREATE INDEX factory_case_sync_case_rev_idx ON public.factory_case_sync USING btree (case_code, sync_rev)"
+        },
+        {
+          "name": "factory_case_sync_pkey",
+          "definition": "CREATE UNIQUE INDEX factory_case_sync_pkey ON public.factory_case_sync USING btree (id)"
+        },
+        {
+          "name": "factory_case_sync_sync_idx",
+          "definition": "CREATE INDEX factory_case_sync_sync_idx ON public.factory_case_sync USING btree (sync_id)"
+        }
+      ],
+      "table_name": "factory_case_sync",
+      "constraints": [
+        {
+          "name": "factory_case_sync_case_code_fkey",
+          "type": "f",
+          "definition": "FOREIGN KEY (case_code) REFERENCES factory_cases(case_code) ON DELETE CASCADE"
+        },
+        {
+          "name": "factory_case_sync_case_code_sync_id_key",
+          "type": "u",
+          "definition": "UNIQUE (case_code, sync_id)"
+        },
+        {
+          "name": "factory_case_sync_pkey",
+          "type": "p",
+          "definition": "PRIMARY KEY (id)"
+        },
+        {
+          "name": "factory_case_sync_sha",
+          "type": "c",
+          "definition": "CHECK ((tree_sha256 ~ '^[A-Fa-f0-9]{64}$'::text))"
+        },
+        {
+          "name": "factory_case_sync_status",
+          "type": "c",
+          "definition": "CHECK ((status = ANY (ARRAY['staged'::text, 'uploaded'::text, 'validated'::text, 'rejected'::text, 'superseded'::text])))"
+        },
+        {
+          "name": "factory_case_sync_sync_id_fkey",
+          "type": "f",
+          "definition": "FOREIGN KEY (sync_id) REFERENCES factory_sync_packages(sync_id) ON DELETE CASCADE"
+        },
+        {
+          "name": "factory_case_sync_sync_rev_check",
+          "type": "c",
+          "definition": "CHECK ((sync_rev >= 1))"
+        }
+      ],
+      "rls_enabled": true
+    },
+    {
+      "columns": [
+        {
+          "udt": "text",
+          "name": "case_code",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "udt": "text",
+          "name": "folder_name",
+          "type": "text",
+          "default": null,
+          "nullable": "YES"
+        },
+        {
+          "udt": "text",
+          "name": "title",
+          "type": "text",
+          "default": null,
+          "nullable": "YES"
+        },
+        {
+          "udt": "text",
+          "name": "case_version",
+          "type": "text",
+          "default": null,
+          "nullable": "YES"
+        },
+        {
+          "udt": "text",
+          "name": "canon_version",
+          "type": "text",
+          "default": null,
+          "nullable": "YES"
+        },
+        {
+          "udt": "text",
+          "name": "logic_version",
+          "type": "text",
+          "default": null,
+          "nullable": "YES"
+        },
+        {
+          "udt": "text",
+          "name": "production_state_version",
+          "type": "text",
+          "default": null,
+          "nullable": "YES"
+        },
+        {
+          "udt": "text",
+          "name": "authority_state",
+          "type": "text",
+          "default": "'draft'::text",
+          "nullable": "NO"
+        },
+        {
+          "udt": "int4",
+          "name": "current_sync_rev",
+          "type": "integer",
+          "default": "0",
+          "nullable": "NO"
+        },
+        {
+          "udt": "text",
+          "name": "tree_sha256",
+          "type": "text",
+          "default": null,
+          "nullable": "YES"
+        },
+        {
+          "udt": "timestamptz",
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "now()",
+          "nullable": "NO"
+        },
+        {
+          "udt": "timestamptz",
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "default": "now()",
+          "nullable": "NO"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "factory_cases_folder_name_key",
+          "definition": "CREATE UNIQUE INDEX factory_cases_folder_name_key ON public.factory_cases USING btree (folder_name)"
+        },
+        {
+          "name": "factory_cases_pkey",
+          "definition": "CREATE UNIQUE INDEX factory_cases_pkey ON public.factory_cases USING btree (case_code)"
+        }
+      ],
+      "table_name": "factory_cases",
+      "constraints": [
+        {
+          "name": "factory_cases_authority_state",
+          "type": "c",
+          "definition": "CHECK ((authority_state = ANY (ARRAY['draft'::text, 'staged'::text, 'validated'::text, 'authoritative'::text, 'frozen'::text, 'superseded'::text])))"
+        },
+        {
+          "name": "factory_cases_current_sync_rev_check",
+          "type": "c",
+          "definition": "CHECK ((current_sync_rev >= 0))"
+        },
+        {
+          "name": "factory_cases_folder_name_key",
+          "type": "u",
+          "definition": "UNIQUE (folder_name)"
+        },
+        {
+          "name": "factory_cases_pkey",
+          "type": "p",
+          "definition": "PRIMARY KEY (case_code)"
+        },
+        {
+          "name": "factory_cases_tree_hash",
+          "type": "c",
+          "definition": "CHECK (((tree_sha256 IS NULL) OR (tree_sha256 ~ '^[A-Fa-f0-9]{64}$'::text)))"
+        }
+      ],
+      "rls_enabled": true
+    },
+    {
+      "columns": [
+        {
+          "udt": "uuid",
+          "name": "id",
+          "type": "uuid",
+          "default": "gen_random_uuid()",
+          "nullable": "NO"
+        },
+        {
+          "udt": "text",
+          "name": "document_key",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "udt": "text",
+          "name": "case_code",
+          "type": "text",
+          "default": null,
+          "nullable": "YES"
+        },
+        {
+          "udt": "text",
+          "name": "scope",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "udt": "text",
+          "name": "relative_path",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "udt": "text",
+          "name": "filename",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "udt": "text",
+          "name": "media_type",
+          "type": "text",
+          "default": "'text/plain'::text",
+          "nullable": "NO"
+        },
+        {
+          "udt": "text",
+          "name": "sha256",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "udt": "int8",
+          "name": "size_bytes",
+          "type": "bigint",
+          "default": null,
+          "nullable": "YES"
+        },
+        {
+          "udt": "text",
+          "name": "content_text",
+          "type": "text",
+          "default": null,
+          "nullable": "YES"
+        },
+        {
+          "udt": "text",
+          "name": "storage_path",
+          "type": "text",
+          "default": null,
+          "nullable": "YES"
+        },
+        {
+          "udt": "text",
+          "name": "sync_id",
+          "type": "text",
+          "default": null,
+          "nullable": "YES"
+        },
+        {
+          "udt": "int4",
+          "name": "sync_rev",
+          "type": "integer",
+          "default": null,
+          "nullable": "YES"
+        },
+        {
+          "udt": "bool",
+          "name": "is_authoritative",
+          "type": "boolean",
+          "default": "false",
+          "nullable": "NO"
+        },
+        {
+          "udt": "text",
+          "name": "authority_state",
+          "type": "text",
+          "default": "'staged'::text",
+          "nullable": "NO"
+        },
+        {
+          "udt": "jsonb",
+          "name": "metadata",
+          "type": "jsonb",
+          "default": "'{}'::jsonb",
+          "nullable": "NO"
+        },
+        {
+          "udt": "timestamptz",
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "now()",
+          "nullable": "NO"
+        },
+        {
+          "udt": "timestamptz",
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "default": "now()",
+          "nullable": "NO"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "factory_documents_case_idx",
+          "definition": "CREATE INDEX factory_documents_case_idx ON public.factory_documents USING btree (case_code)"
+        },
+        {
+          "name": "factory_documents_document_key_key",
+          "definition": "CREATE UNIQUE INDEX factory_documents_document_key_key ON public.factory_documents USING btree (document_key)"
+        },
+        {
+          "name": "factory_documents_path_idx",
+          "definition": "CREATE INDEX factory_documents_path_idx ON public.factory_documents USING btree (relative_path)"
+        },
+        {
+          "name": "factory_documents_pkey",
+          "definition": "CREATE UNIQUE INDEX factory_documents_pkey ON public.factory_documents USING btree (id)"
+        },
+        {
+          "name": "factory_documents_sync_idx",
+          "definition": "CREATE INDEX factory_documents_sync_idx ON public.factory_documents USING btree (sync_id)"
+        }
+      ],
+      "table_name": "factory_documents",
+      "constraints": [
+        {
+          "name": "factory_documents_authority_state",
+          "type": "c",
+          "definition": "CHECK ((authority_state = ANY (ARRAY['draft'::text, 'staged'::text, 'validated'::text, 'authoritative'::text, 'frozen'::text, 'superseded'::text])))"
+        },
+        {
+          "name": "factory_documents_case_code_fkey",
+          "type": "f",
+          "definition": "FOREIGN KEY (case_code) REFERENCES factory_cases(case_code) ON DELETE CASCADE"
+        },
+        {
+          "name": "factory_documents_document_key_key",
+          "type": "u",
+          "definition": "UNIQUE (document_key)"
+        },
+        {
+          "name": "factory_documents_pkey",
+          "type": "p",
+          "definition": "PRIMARY KEY (id)"
+        },
+        {
+          "name": "factory_documents_scope",
+          "type": "c",
+          "definition": "CHECK ((scope = ANY (ARRAY['global'::text, 'case'::text])))"
+        },
+        {
+          "name": "factory_documents_scope_case",
+          "type": "c",
+          "definition": "CHECK ((((scope = 'global'::text) AND (case_code IS NULL)) OR ((scope = 'case'::text) AND (case_code IS NOT NULL))))"
+        },
+        {
+          "name": "factory_documents_sha",
+          "type": "c",
+          "definition": "CHECK ((sha256 ~ '^[A-Fa-f0-9]{64}$'::text))"
+        },
+        {
+          "name": "factory_documents_sync_id_fkey",
+          "type": "f",
+          "definition": "FOREIGN KEY (sync_id) REFERENCES factory_sync_packages(sync_id) ON DELETE SET NULL"
+        }
+      ],
+      "rls_enabled": true
+    },
+    {
+      "columns": [
+        {
+          "udt": "uuid",
+          "name": "id",
+          "type": "uuid",
+          "default": "gen_random_uuid()",
+          "nullable": "NO"
+        },
+        {
+          "udt": "text",
+          "name": "gate_id",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "udt": "text",
+          "name": "case_code",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "udt": "text",
+          "name": "gate_code",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "udt": "text",
+          "name": "gate_version",
+          "type": "text",
+          "default": null,
+          "nullable": "YES"
+        },
+        {
+          "udt": "text",
+          "name": "status",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "udt": "uuid",
+          "name": "source_return_id",
+          "type": "uuid",
+          "default": null,
+          "nullable": "YES"
+        },
+        {
+          "udt": "text",
+          "name": "evidence_sha256",
+          "type": "text",
+          "default": null,
+          "nullable": "YES"
+        },
+        {
+          "udt": "jsonb",
+          "name": "metadata",
+          "type": "jsonb",
+          "default": "'{}'::jsonb",
+          "nullable": "NO"
+        },
+        {
+          "udt": "text",
+          "name": "recorded_by",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "udt": "timestamptz",
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "now()",
+          "nullable": "NO"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "factory_gate_records_gate_id_key",
+          "definition": "CREATE UNIQUE INDEX factory_gate_records_gate_id_key ON public.factory_gate_records USING btree (gate_id)"
+        },
+        {
+          "name": "factory_gate_records_pkey",
+          "definition": "CREATE UNIQUE INDEX factory_gate_records_pkey ON public.factory_gate_records USING btree (id)"
+        },
+        {
+          "name": "idx_factory_gate_records_case",
+          "definition": "CREATE INDEX idx_factory_gate_records_case ON public.factory_gate_records USING btree (case_code, gate_code, created_at DESC)"
+        }
+      ],
+      "table_name": "factory_gate_records",
+      "constraints": [
+        {
+          "name": "factory_gate_records_case_code_fkey",
+          "type": "f",
+          "definition": "FOREIGN KEY (case_code) REFERENCES factory_cases(case_code) ON UPDATE CASCADE ON DELETE RESTRICT"
+        },
+        {
+          "name": "factory_gate_records_evidence_sha256_check",
+          "type": "c",
+          "definition": "CHECK (((evidence_sha256 IS NULL) OR (evidence_sha256 ~ '^[A-F0-9]{64}$'::text)))"
+        },
+        {
+          "name": "factory_gate_records_gate_id_key",
+          "type": "u",
+          "definition": "UNIQUE (gate_id)"
+        },
+        {
+          "name": "factory_gate_records_pkey",
+          "type": "p",
+          "definition": "PRIMARY KEY (id)"
+        },
+        {
+          "name": "factory_gate_records_recorded_by_fkey",
+          "type": "f",
+          "definition": "FOREIGN KEY (recorded_by) REFERENCES factory_agents(agent_code) ON UPDATE CASCADE ON DELETE RESTRICT"
+        },
+        {
+          "name": "factory_gate_records_source_return_id_fkey",
+          "type": "f",
+          "definition": "FOREIGN KEY (source_return_id) REFERENCES factory_agent_returns(id) ON UPDATE CASCADE ON DELETE RESTRICT"
+        },
+        {
+          "name": "factory_gate_records_status_check",
+          "type": "c",
+          "definition": "CHECK ((status = ANY (ARRAY['pending'::text, 'pass'::text, 'blocked'::text, 'failed'::text])))"
+        }
+      ],
+      "rls_enabled": true
+    },
+    {
+      "columns": [
+        {
+          "udt": "uuid",
+          "name": "id",
+          "type": "uuid",
+          "default": "gen_random_uuid()",
+          "nullable": "NO"
+        },
+        {
+          "udt": "text",
+          "name": "handoff_id",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "udt": "text",
+          "name": "case_code",
+          "type": "text",
+          "default": null,
+          "nullable": "YES"
+        },
+        {
+          "udt": "text",
+          "name": "from_agent",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "udt": "text",
+          "name": "to_agent",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "udt": "text",
+          "name": "protocol_version",
+          "type": "text",
+          "default": null,
+          "nullable": "YES"
+        },
+        {
+          "udt": "text",
+          "name": "gate",
+          "type": "text",
+          "default": null,
+          "nullable": "YES"
+        },
+        {
+          "udt": "text",
+          "name": "status",
+          "type": "text",
+          "default": "'issued'::text",
+          "nullable": "NO"
+        },
+        {
+          "udt": "jsonb",
+          "name": "payload",
+          "type": "jsonb",
+          "default": "'{}'::jsonb",
+          "nullable": "NO"
+        },
+        {
+          "udt": "timestamptz",
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "now()",
+          "nullable": "NO"
+        },
+        {
+          "udt": "timestamptz",
+          "name": "acknowledged_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "nullable": "YES"
+        },
+        {
+          "udt": "timestamptz",
+          "name": "completed_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "nullable": "YES"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "factory_handoffs_case_idx",
+          "definition": "CREATE INDEX factory_handoffs_case_idx ON public.factory_handoffs USING btree (case_code)"
+        },
+        {
+          "name": "factory_handoffs_from_agent_idx",
+          "definition": "CREATE INDEX factory_handoffs_from_agent_idx ON public.factory_handoffs USING btree (from_agent)"
+        },
+        {
+          "name": "factory_handoffs_handoff_id_key",
+          "definition": "CREATE UNIQUE INDEX factory_handoffs_handoff_id_key ON public.factory_handoffs USING btree (handoff_id)"
+        },
+        {
+          "name": "factory_handoffs_pkey",
+          "definition": "CREATE UNIQUE INDEX factory_handoffs_pkey ON public.factory_handoffs USING btree (id)"
+        },
+        {
+          "name": "factory_handoffs_to_agent_idx",
+          "definition": "CREATE INDEX factory_handoffs_to_agent_idx ON public.factory_handoffs USING btree (to_agent, status)"
+        }
+      ],
+      "table_name": "factory_handoffs",
+      "constraints": [
+        {
+          "name": "factory_handoffs_case_code_fkey",
+          "type": "f",
+          "definition": "FOREIGN KEY (case_code) REFERENCES factory_cases(case_code) ON DELETE CASCADE"
+        },
+        {
+          "name": "factory_handoffs_from_agent_fkey",
+          "type": "f",
+          "definition": "FOREIGN KEY (from_agent) REFERENCES factory_agents(agent_code)"
+        },
+        {
+          "name": "factory_handoffs_handoff_id_key",
+          "type": "u",
+          "definition": "UNIQUE (handoff_id)"
+        },
+        {
+          "name": "factory_handoffs_pkey",
+          "type": "p",
+          "definition": "PRIMARY KEY (id)"
+        },
+        {
+          "name": "factory_handoffs_status",
+          "type": "c",
+          "definition": "CHECK ((status = ANY (ARRAY['issued'::text, 'accepted'::text, 'blocked'::text, 'completed'::text, 'superseded'::text, 'cancelled'::text])))"
+        },
+        {
+          "name": "factory_handoffs_to_agent_fkey",
+          "type": "f",
+          "definition": "FOREIGN KEY (to_agent) REFERENCES factory_agents(agent_code)"
+        }
+      ],
+      "rls_enabled": true
+    },
+    {
+      "columns": [
+        {
+          "udt": "text",
+          "name": "sync_id",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "udt": "text",
+          "name": "package_sha256",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "udt": "text",
+          "name": "package_tree_sha256",
+          "type": "text",
+          "default": null,
+          "nullable": "YES"
+        },
+        {
+          "udt": "bool",
+          "name": "global_changed",
+          "type": "boolean",
+          "default": "false",
+          "nullable": "NO"
+        },
+        {
+          "udt": "jsonb",
+          "name": "changed_cases",
+          "type": "jsonb",
+          "default": "'[]'::jsonb",
+          "nullable": "NO"
+        },
+        {
+          "udt": "text",
+          "name": "status",
+          "type": "text",
+          "default": "'staged'::text",
+          "nullable": "NO"
+        },
+        {
+          "udt": "text",
+          "name": "storage_path",
+          "type": "text",
+          "default": null,
+          "nullable": "YES"
+        },
+        {
+          "udt": "text",
+          "name": "received_by",
+          "type": "text",
+          "default": null,
+          "nullable": "NO"
+        },
+        {
+          "udt": "timestamptz",
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "now()",
+          "nullable": "NO"
+        },
+        {
+          "udt": "timestamptz",
+          "name": "uploaded_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "nullable": "YES"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "factory_sync_packages_pkey",
+          "definition": "CREATE UNIQUE INDEX factory_sync_packages_pkey ON public.factory_sync_packages USING btree (sync_id)"
+        },
+        {
+          "name": "factory_sync_packages_received_by_idx",
+          "definition": "CREATE INDEX factory_sync_packages_received_by_idx ON public.factory_sync_packages USING btree (received_by)"
+        }
+      ],
+      "table_name": "factory_sync_packages",
+      "constraints": [
+        {
+          "name": "factory_sync_packages_changed_cases",
+          "type": "c",
+          "definition": "CHECK ((jsonb_typeof(changed_cases) = 'array'::text))"
+        },
+        {
+          "name": "factory_sync_packages_pkey",
+          "type": "p",
+          "definition": "PRIMARY KEY (sync_id)"
+        },
+        {
+          "name": "factory_sync_packages_received_by_fkey",
+          "type": "f",
+          "definition": "FOREIGN KEY (received_by) REFERENCES factory_agents(agent_code)"
+        },
+        {
+          "name": "factory_sync_packages_sha",
+          "type": "c",
+          "definition": "CHECK ((package_sha256 ~ '^[A-Fa-f0-9]{64}$'::text))"
+        },
+        {
+          "name": "factory_sync_packages_status",
+          "type": "c",
+          "definition": "CHECK ((status = ANY (ARRAY['staged'::text, 'uploaded'::text, 'validated'::text, 'rejected'::text, 'superseded'::text])))"
+        },
+        {
+          "name": "factory_sync_packages_tree_sha",
+          "type": "c",
+          "definition": "CHECK (((package_tree_sha256 IS NULL) OR (package_tree_sha256 ~ '^[A-Fa-f0-9]{64}$'::text)))"
+        }
+      ],
+      "rls_enabled": true
+    }
+  ],
+  "policies": [],
+  "functions": [
+    {
+      "args": "p_authority_id text, p_actor text",
+      "name": "factory_freeze_authority",
+      "result": "jsonb",
+      "definition": "CREATE OR REPLACE FUNCTION public.factory_freeze_authority(p_authority_id text, p_actor text)\n RETURNS jsonb\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO 'public'\nAS $function$\nbegin\n  raise exception 'USE_ATOMIC_AUTHORITY_SET_OPERATION';\nend;\n$function$\n",
+      "security_definer": true
+    },
+    {
+      "args": "p_case_code text, p_case_canon_authority_id text, p_case_logic_authority_id text, p_production_state_authority_id text, p_actor text",
+      "name": "factory_freeze_authority_set",
+      "result": "jsonb",
+      "definition": "CREATE OR REPLACE FUNCTION public.factory_freeze_authority_set(p_case_code text, p_case_canon_authority_id text, p_case_logic_authority_id text, p_production_state_authority_id text, p_actor text)\n RETURNS jsonb\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO 'public'\nAS $function$\ndeclare\n  rc public.factory_authority_records%rowtype;\n  rl public.factory_authority_records%rowtype;\n  rp public.factory_authority_records%rowtype;\n  v_match_count int;\nbegin\n  perform pg_advisory_xact_lock(hashtext(p_case_code));\n\n  rc := public.factory_get_ready_authority(p_case_canon_authority_id,p_case_code,'CASE_CANON','authoritative');\n  rl := public.factory_get_ready_authority(p_case_logic_authority_id,p_case_code,'CASE_LOGIC','authoritative');\n  rp := public.factory_get_ready_authority(p_production_state_authority_id,p_case_code,'PRODUCTION_STATE','authoritative');\n\n  select count(*) into v_match_count\n  from public.factory_authority_current c\n  where c.case_code=p_case_code\n    and ((c.authority_type='CASE_CANON' and c.authority_record_id=rc.id)\n      or (c.authority_type='CASE_LOGIC' and c.authority_record_id=rl.id)\n      or (c.authority_type='PRODUCTION_STATE' and c.authority_record_id=rp.id));\n  if v_match_count <> 3 then raise exception 'AUTHORITY_SET_NOT_CURRENT'; end if;\n\n  perform set_config('factory.authority_transition','on',true);\n\n  update public.factory_authority_records\n  set state='frozen', frozen_by=p_actor, frozen_at=now()\n  where id in (rc.id,rl.id,rp.id);\n\n  update public.factory_documents\n  set is_authoritative=true, authority_state='frozen', updated_at=now()\n  where document_key in (rc.source_document_key,rl.source_document_key,rp.source_document_key);\n\n  perform public.factory_reconcile_case_authority(p_case_code);\n\n  insert into public.factory_audit_log(actor,action,entity_type,entity_id,payload)\n  values(\n    p_actor,'AUTHORITY_SET_FROZEN','authority_set',p_case_code,\n    jsonb_build_object(\n      'case_code',p_case_code,\n      'case_canon',p_case_canon_authority_id,\n      'case_logic',p_case_logic_authority_id,\n      'production_state',p_production_state_authority_id\n    )\n  );\n\n  return jsonb_build_object(\n    'case_code',p_case_code,\n    'records',(\n      select jsonb_agg(to_jsonb(r) order by r.authority_type)\n      from public.factory_authority_records r\n      where r.id in (rc.id,rl.id,rp.id)\n    )\n  );\nend;\n$function$\n",
+      "security_definer": true
+    },
+    {
+      "args": "p_authority_id text, p_case_code text, p_authority_type text, p_required_state text",
+      "name": "factory_get_ready_authority",
+      "result": "factory_authority_records",
+      "definition": "CREATE OR REPLACE FUNCTION public.factory_get_ready_authority(p_authority_id text, p_case_code text, p_authority_type text, p_required_state text)\n RETURNS factory_authority_records\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO 'public'\nAS $function$\ndeclare\n  r public.factory_authority_records%rowtype;\n  d public.factory_documents%rowtype;\n  g public.factory_gate_records%rowtype;\nbegin\n  select * into r\n  from public.factory_authority_records\n  where authority_id = p_authority_id\n  for update;\n\n  if not found then raise exception 'AUTHORITY_NOT_FOUND'; end if;\n  if r.case_code is distinct from p_case_code then raise exception 'AUTHORITY_SET_CASE_MISMATCH'; end if;\n  if r.authority_type is distinct from p_authority_type then raise exception 'AUTHORITY_SET_TYPE_MISMATCH'; end if;\n\n  if p_required_state = 'validated' and r.state <> 'validated' then\n    raise exception 'AUTHORITY_SET_NOT_VALIDATED';\n  elsif p_required_state = 'authoritative' and r.state <> 'authoritative' then\n    raise exception 'AUTHORITY_SET_NOT_AUTHORITATIVE';\n  end if;\n\n  if r.source_document_key is null then raise exception 'SOURCE_DOCUMENT_REQUIRED'; end if;\n  select * into d from public.factory_documents where document_key=r.source_document_key;\n  if not found or d.case_code is distinct from r.case_code or d.sha256 is distinct from r.sha256 then\n    raise exception 'SOURCE_DOCUMENT_MISMATCH';\n  end if;\n\n  if r.supporting_gate_id is not null then\n    select * into g from public.factory_gate_records where gate_id=r.supporting_gate_id;\n    if not found or g.case_code is distinct from r.case_code or g.status <> 'pass' then\n      raise exception 'SUPPORTING_GATE_NOT_PASS';\n    end if;\n  end if;\n\n  return r;\nend;\n$function$\n",
+      "security_definer": true
+    },
+    {
+      "args": "input_value jsonb, field_name text",
+      "name": "factory_normalize_embedded_json_object",
+      "result": "jsonb",
+      "definition": "CREATE OR REPLACE FUNCTION public.factory_normalize_embedded_json_object(input_value jsonb, field_name text)\n RETURNS jsonb\n LANGUAGE plpgsql\n IMMUTABLE\n SET search_path TO 'public'\nAS $function$\ndeclare\n  parsed jsonb;\nbegin\n  if input_value is null then\n    return '{}'::jsonb;\n  end if;\n\n  if jsonb_typeof(input_value) = 'object' then\n    return input_value;\n  end if;\n\n  if jsonb_typeof(input_value) <> 'string' then\n    raise exception '% must be a JSON object or a JSON-encoded object string', field_name;\n  end if;\n\n  begin\n    parsed := (input_value #>> '{}')::jsonb;\n  exception when others then\n    raise exception '% contains invalid embedded JSON', field_name;\n  end;\n\n  if parsed is null or jsonb_typeof(parsed) <> 'object' then\n    raise exception '% embedded JSON must decode to an object', field_name;\n  end if;\n\n  return parsed;\nend;\n$function$\n",
+      "security_definer": false
+    },
+    {
+      "args": "",
+      "name": "factory_normalize_handoff_payload",
+      "result": "trigger",
+      "definition": "CREATE OR REPLACE FUNCTION public.factory_normalize_handoff_payload()\n RETURNS trigger\n LANGUAGE plpgsql\n SET search_path TO 'public'\nAS $function$\nbegin\n  new.payload := public.factory_normalize_embedded_json_object(new.payload, 'payload');\n  return new;\nend;\n$function$\n",
+      "security_definer": false
+    },
+    {
+      "args": "",
+      "name": "factory_normalize_return_metadata",
+      "result": "trigger",
+      "definition": "CREATE OR REPLACE FUNCTION public.factory_normalize_return_metadata()\n RETURNS trigger\n LANGUAGE plpgsql\n SET search_path TO 'public'\nAS $function$\nbegin\n  new.metadata := public.factory_normalize_embedded_json_object(new.metadata, 'metadata');\n  return new;\nend;\n$function$\n",
+      "security_definer": false
+    },
+    {
+      "args": "",
+      "name": "factory_preserve_authoritative_document",
+      "result": "trigger",
+      "definition": "CREATE OR REPLACE FUNCTION public.factory_preserve_authoritative_document()\n RETURNS trigger\n LANGUAGE plpgsql\n SET search_path TO 'public'\nAS $function$\ndeclare\n  v_internal boolean := coalesce(current_setting('factory.authority_transition', true),'') = 'on';\nbegin\n  if old.is_authoritative = true or old.authority_state in ('authoritative','frozen') then\n    if new.sha256 is distinct from old.sha256 then\n      raise exception 'AUTHORITATIVE_DOCUMENT_IMMUTABLE';\n    end if;\n    if not v_internal then\n      new.is_authoritative := old.is_authoritative;\n      new.authority_state := old.authority_state;\n    else\n      if new.authority_state not in ('authoritative','frozen','superseded') then\n        raise exception 'INVALID_INTERNAL_AUTHORITY_TRANSITION';\n      end if;\n    end if;\n  end if;\n  return new;\nend;\n$function$\n",
+      "security_definer": false
+    },
+    {
+      "args": "p_authority_id text, p_actor text",
+      "name": "factory_promote_authority",
+      "result": "jsonb",
+      "definition": "CREATE OR REPLACE FUNCTION public.factory_promote_authority(p_authority_id text, p_actor text)\n RETURNS jsonb\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO 'public'\nAS $function$\nbegin\n  raise exception 'USE_ATOMIC_AUTHORITY_SET_OPERATION';\nend;\n$function$\n",
+      "security_definer": true
+    },
+    {
+      "args": "p_case_code text, p_case_canon_authority_id text, p_case_logic_authority_id text, p_production_state_authority_id text, p_actor text",
+      "name": "factory_promote_authority_set",
+      "result": "jsonb",
+      "definition": "CREATE OR REPLACE FUNCTION public.factory_promote_authority_set(p_case_code text, p_case_canon_authority_id text, p_case_logic_authority_id text, p_production_state_authority_id text, p_actor text)\n RETURNS jsonb\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO 'public'\nAS $function$\ndeclare\n  rc public.factory_authority_records%rowtype;\n  rl public.factory_authority_records%rowtype;\n  rp public.factory_authority_records%rowtype;\n  v_current_count int;\nbegin\n  perform pg_advisory_xact_lock(hashtext(p_case_code));\n\n  rc := public.factory_get_ready_authority(p_case_canon_authority_id,p_case_code,'CASE_CANON','validated');\n  rl := public.factory_get_ready_authority(p_case_logic_authority_id,p_case_code,'CASE_LOGIC','validated');\n  rp := public.factory_get_ready_authority(p_production_state_authority_id,p_case_code,'PRODUCTION_STATE','validated');\n\n  select count(*) into v_current_count from public.factory_authority_current where case_code=p_case_code;\n  if v_current_count <> 0 then raise exception 'CURRENT_AUTHORITY_NOT_EMPTY'; end if;\n\n  perform set_config('factory.authority_transition','on',true);\n\n  update public.factory_authority_records\n  set state='authoritative', promoted_by=p_actor, promoted_at=now()\n  where id in (rc.id,rl.id,rp.id);\n\n  insert into public.factory_authority_current(case_code,authority_type,authority_record_id,updated_at)\n  values\n    (p_case_code,'CASE_CANON',rc.id,now()),\n    (p_case_code,'CASE_LOGIC',rl.id,now()),\n    (p_case_code,'PRODUCTION_STATE',rp.id,now());\n\n  update public.factory_documents\n  set is_authoritative=true, authority_state='authoritative', updated_at=now()\n  where document_key in (rc.source_document_key,rl.source_document_key,rp.source_document_key);\n\n  perform public.factory_reconcile_case_authority(p_case_code);\n\n  insert into public.factory_audit_log(actor,action,entity_type,entity_id,payload)\n  values(\n    p_actor,'AUTHORITY_SET_PROMOTED','authority_set',p_case_code,\n    jsonb_build_object(\n      'case_code',p_case_code,\n      'case_canon',p_case_canon_authority_id,\n      'case_logic',p_case_logic_authority_id,\n      'production_state',p_production_state_authority_id\n    )\n  );\n\n  return jsonb_build_object(\n    'case_code',p_case_code,\n    'records',(\n      select jsonb_agg(to_jsonb(r) order by r.authority_type)\n      from public.factory_authority_records r\n      where r.id in (rc.id,rl.id,rp.id)\n    )\n  );\nend;\n$function$\n",
+      "security_definer": true
+    },
+    {
+      "args": "p_case_code text",
+      "name": "factory_reconcile_case_authority",
+      "result": "void",
+      "definition": "CREATE OR REPLACE FUNCTION public.factory_reconcile_case_authority(p_case_code text)\n RETURNS void\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO 'public'\nAS $function$\ndeclare\n  v_canon text;\n  v_logic text;\n  v_prod text;\n  v_count int;\n  v_frozen int;\nbegin\n  select\n    max(r.version) filter (where c.authority_type='CASE_CANON'),\n    max(r.version) filter (where c.authority_type='CASE_LOGIC'),\n    max(r.version) filter (where c.authority_type='PRODUCTION_STATE'),\n    count(*),\n    count(*) filter (where r.state='frozen')\n  into v_canon,v_logic,v_prod,v_count,v_frozen\n  from public.factory_authority_current c\n  join public.factory_authority_records r on r.id=c.authority_record_id\n  where c.case_code=p_case_code;\n\n  update public.factory_cases\n  set canon_version=v_canon,\n      logic_version=v_logic,\n      production_state_version=v_prod,\n      authority_state=case\n        when v_count=3 and v_frozen=3 then 'frozen'\n        when v_count=3 then 'authoritative'\n        else 'draft'\n      end,\n      updated_at=now()\n  where case_code=p_case_code;\nend;\n$function$\n",
+      "security_definer": true
+    },
+    {
+      "args": "p_case_code text, p_case_canon_authority_id text, p_case_logic_authority_id text, p_production_state_authority_id text, p_actor text, p_reason text",
+      "name": "factory_replace_authority_set",
+      "result": "jsonb",
+      "definition": "CREATE OR REPLACE FUNCTION public.factory_replace_authority_set(p_case_code text, p_case_canon_authority_id text, p_case_logic_authority_id text, p_production_state_authority_id text, p_actor text, p_reason text)\n RETURNS jsonb\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO 'public'\nAS $function$\ndeclare\n  rc public.factory_authority_records%rowtype;\n  rl public.factory_authority_records%rowtype;\n  rp public.factory_authority_records%rowtype;\n  old_ids uuid[];\n  old_count int;\nbegin\n  if p_reason is null or length(trim(p_reason)) < 3 then raise exception 'REPLACEMENT_REASON_REQUIRED'; end if;\n  perform pg_advisory_xact_lock(hashtext(p_case_code));\n\n  rc := public.factory_get_ready_authority(p_case_canon_authority_id,p_case_code,'CASE_CANON','validated');\n  rl := public.factory_get_ready_authority(p_case_logic_authority_id,p_case_code,'CASE_LOGIC','validated');\n  rp := public.factory_get_ready_authority(p_production_state_authority_id,p_case_code,'PRODUCTION_STATE','validated');\n\n  select array_agg(authority_record_id order by authority_type), count(*)\n  into old_ids, old_count\n  from public.factory_authority_current\n  where case_code=p_case_code;\n  if old_count <> 3 then raise exception 'CURRENT_AUTHORITY_SET_INCOMPLETE'; end if;\n\n  if exists(\n    select 1 from public.factory_authority_records r\n    where r.id = any(old_ids) and r.state not in ('authoritative','frozen')\n  ) then raise exception 'CURRENT_AUTHORITY_SET_INVALID'; end if;\n\n  perform set_config('factory.authority_transition','on',true);\n\n  update public.factory_documents d\n  set is_authoritative=false, authority_state='superseded', updated_at=now()\n  where d.document_key in (\n    select r.source_document_key from public.factory_authority_records r where r.id = any(old_ids)\n  );\n\n  update public.factory_authority_records\n  set state='superseded', superseded_by=p_actor, superseded_at=now(), supersede_reason=trim(p_reason)\n  where id = any(old_ids);\n\n  delete from public.factory_authority_current where case_code=p_case_code;\n\n  update public.factory_authority_records\n  set state='authoritative', promoted_by=p_actor, promoted_at=now()\n  where id in (rc.id,rl.id,rp.id);\n\n  insert into public.factory_authority_current(case_code,authority_type,authority_record_id,updated_at)\n  values\n    (p_case_code,'CASE_CANON',rc.id,now()),\n    (p_case_code,'CASE_LOGIC',rl.id,now()),\n    (p_case_code,'PRODUCTION_STATE',rp.id,now());\n\n  update public.factory_documents\n  set is_authoritative=true, authority_state='authoritative', updated_at=now()\n  where document_key in (rc.source_document_key,rl.source_document_key,rp.source_document_key);\n\n  perform public.factory_reconcile_case_authority(p_case_code);\n\n  insert into public.factory_audit_log(actor,action,entity_type,entity_id,payload)\n  values(\n    p_actor,'AUTHORITY_SET_REPLACED','authority_set',p_case_code,\n    jsonb_build_object(\n      'case_code',p_case_code,\n      'reason',trim(p_reason),\n      'old_record_ids',to_jsonb(old_ids),\n      'case_canon',p_case_canon_authority_id,\n      'case_logic',p_case_logic_authority_id,\n      'production_state',p_production_state_authority_id\n    )\n  );\n\n  return jsonb_build_object(\n    'case_code',p_case_code,\n    'superseded_record_ids',to_jsonb(old_ids),\n    'records',(\n      select jsonb_agg(to_jsonb(r) order by r.authority_type)\n      from public.factory_authority_records r\n      where r.id in (rc.id,rl.id,rp.id)\n    )\n  );\nend;\n$function$\n",
+      "security_definer": true
+    },
+    {
+      "args": "p_authority_id text, p_actor text, p_reason text",
+      "name": "factory_supersede_authority",
+      "result": "jsonb",
+      "definition": "CREATE OR REPLACE FUNCTION public.factory_supersede_authority(p_authority_id text, p_actor text, p_reason text)\n RETURNS jsonb\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO 'public'\nAS $function$\nbegin\n  raise exception 'USE_ATOMIC_AUTHORITY_SET_OPERATION';\nend;\n$function$\n",
+      "security_definer": true
+    },
+    {
+      "args": "",
+      "name": "factory_touch_updated_at",
+      "result": "trigger",
+      "definition": "CREATE OR REPLACE FUNCTION public.factory_touch_updated_at()\n RETURNS trigger\n LANGUAGE plpgsql\n SET search_path TO 'public'\nAS $function$\nbegin new.updated_at = now(); return new; end;\n$function$\n",
+      "security_definer": false
+    },
+    {
+      "args": "p_authority_id text, p_actor text",
+      "name": "factory_validate_authority",
+      "result": "jsonb",
+      "definition": "CREATE OR REPLACE FUNCTION public.factory_validate_authority(p_authority_id text, p_actor text)\n RETURNS jsonb\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO 'public'\nAS $function$\ndeclare\n  r public.factory_authority_records%rowtype;\n  d public.factory_documents%rowtype;\n  g public.factory_gate_records%rowtype;\nbegin\n  select * into r from public.factory_authority_records where authority_id=p_authority_id for update;\n  if not found then raise exception 'AUTHORITY_NOT_FOUND'; end if;\n  if r.state <> 'staged' then raise exception 'AUTHORITY_NOT_STAGED'; end if;\n  if r.source_document_key is null then raise exception 'SOURCE_DOCUMENT_REQUIRED'; end if;\n  select * into d from public.factory_documents where document_key=r.source_document_key;\n  if not found or d.case_code is distinct from r.case_code or d.sha256 is distinct from r.sha256 then raise exception 'SOURCE_DOCUMENT_MISMATCH'; end if;\n  if r.supporting_gate_id is not null then\n    select * into g from public.factory_gate_records where gate_id=r.supporting_gate_id;\n    if not found or g.case_code is distinct from r.case_code or g.status <> 'pass' then raise exception 'SUPPORTING_GATE_NOT_PASS'; end if;\n  end if;\n  update public.factory_authority_records set state='validated',validated_by=p_actor,validated_at=now() where id=r.id returning * into r;\n  update public.factory_documents set authority_state='validated',updated_at=now() where document_key=r.source_document_key and is_authoritative=false;\n  insert into public.factory_audit_log(actor,action,entity_type,entity_id,payload)\n  values(p_actor,'AUTHORITY_VALIDATED','authority_record',r.id::text,jsonb_build_object('authority_id',r.authority_id,'case_code',r.case_code,'authority_type',r.authority_type,'sha256',r.sha256));\n  return to_jsonb(r);\nend;\n$function$\n",
+      "security_definer": true
+    }
+  ],
+  "captured_at": "2026-09-19",
+  "project_ref": "hquaviunbwghkxojndgj",
+  "api_releases": [
+    {
+      "notes": "Factory API v1.3 baseline: 6/6 agents verified; own returns, explicit handoff completion, completion audit and authority isolation validated.",
+      "status": "frozen",
+      "gateway": "factory-api-v13",
+      "version": "1.3.0",
+      "frozen_at": "2026-09-13T23:05:00.251744+00:00",
+      "created_at": "2026-09-13T23:05:00.251744+00:00",
+      "edge_sha256": "1bf55f2fa31fe9c7f0e945ee21a8ce9b8cd922c27ceb3bb0008392ebe9033406",
+      "validated_at": "2026-09-13T23:05:00.251744+00:00",
+      "package_sha256": "188466DFB766EBE1E7880614A185BA4A96CAE62B73F1D916868219A2E2C4FAFE",
+      "verified_agents": [
+        "S0",
+        "A0",
+        "A1",
+        "A2",
+        "A3",
+        "A4"
+      ]
+    },
+    {
+      "notes": "Authoritative State Registry deployed; agent-side OpenAPI rollout and end-to-end validation pending.",
+      "status": "deployed",
+      "gateway": "factory-api-v14",
+      "version": "1.4.0",
+      "frozen_at": null,
+      "created_at": "2026-09-13T23:06:35.427229+00:00",
+      "edge_sha256": "a80176670d07b6cc6f592874f71ade4077d04d45bd62dba5d0e182a4b0dee7cd",
+      "validated_at": null,
+      "package_sha256": "92599B37EB9C367D2FB5CB959AD91915CCA43C47A6D95B7226F2238D243A7881",
+      "verified_agents": []
+    },
+    {
+      "notes": "PREMIUM FINAL 2.0.0. OpenAPI replace request-body compatibility corrected in-place; backend and gateway unchanged. Atomic authority-set semantics preserved.",
+      "status": "deployed",
+      "gateway": "factory-api-premium",
+      "version": "2.0.0",
+      "frozen_at": null,
+      "created_at": "2026-09-14T08:26:30.264467+00:00",
+      "edge_sha256": "a1f0408504ae733db308c76d037fc5efd7392427f45560fb28100561dcef8ee8",
+      "validated_at": null,
+      "package_sha256": "76C364DAEEE9F8782EC4B03022C6E12E046E754CBE2418933631F6097986731A",
+      "verified_agents": []
+    }
+  ],
+  "case_authority_summary": [
+    {
+      "case_code": "DC-001",
+      "canon_version": "v5.0",
+      "logic_version": "v5.0",
+      "document_count": 14,
+      "authority_state": "authoritative",
+      "current_sync_rev": 3,
+      "current_pointer_count": 3,
+      "authority_record_count": 3,
+      "production_state_version": "v5.0"
+    },
+    {
+      "case_code": "DC-002",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-003",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-004",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-005",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-006",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-007",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-008",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-009",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-010",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-011",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-012",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-013",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-014",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-015",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-016",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-017",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-018",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-019",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-020",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-021",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-022",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-023",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-024",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-025",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-026",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-027",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-028",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-029",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-030",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-031",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-032",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-033",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-034",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-035",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-036",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-037",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-038",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-039",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-040",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-041",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-042",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-043",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-044",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-045",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-046",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-047",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-048",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-049",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-050",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-051",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-052",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-053",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-054",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-055",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-056",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-057",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-058",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-059",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-060",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-061",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-062",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-063",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-064",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-065",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-066",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-067",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-068",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-069",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-070",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-071",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-072",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-073",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-074",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-075",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-076",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-077",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-078",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-079",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-080",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-081",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-082",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-083",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-084",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-085",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-086",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-087",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-088",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-089",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-090",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-091",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-092",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-093",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-094",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-095",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-096",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-097",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-098",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-099",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    },
+    {
+      "case_code": "DC-100",
+      "canon_version": null,
+      "logic_version": null,
+      "document_count": 0,
+      "authority_state": "draft",
+      "current_sync_rev": 1,
+      "current_pointer_count": 0,
+      "authority_record_count": 0,
+      "production_state_version": null
+    }
+  ]
+}
+
