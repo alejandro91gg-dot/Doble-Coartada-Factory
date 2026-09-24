@@ -1,0 +1,475 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>TRUE CRIME FACTORY — Autorización</title>
+
+  <style>
+    :root {
+      font-family: Inter, system-ui, sans-serif;
+      background: #f4f1ea;
+      color: #171717;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+
+    .card {
+      width: min(560px, 100%);
+      background: white;
+      border: 1px solid #ded8cc;
+      border-radius: 18px;
+      padding: 32px;
+      box-shadow: 0 18px 50px rgba(0,0,0,.08);
+    }
+
+    .brand {
+      font-size: 12px;
+      letter-spacing: .18em;
+      font-weight: 800;
+      color: #6b6256;
+      margin-bottom: 12px;
+    }
+
+    h1 { margin: 0 0 12px; }
+
+    p {
+      line-height: 1.55;
+      color: #5b554c;
+    }
+
+    label {
+      display: block;
+      margin: 18px 0 7px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    input {
+      width: 100%;
+      padding: 13px;
+      border: 1px solid #cbc4b8;
+      border-radius: 10px;
+      font: inherit;
+    }
+
+    button {
+      border: 0;
+      border-radius: 10px;
+      padding: 13px 16px;
+      font: inherit;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .primary {
+      background: #181818;
+      color: white;
+    }
+
+    .secondary {
+      background: #ede9e1;
+      color: #181818;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 22px;
+    }
+
+    .actions button { flex: 1; }
+
+    .box {
+      background: #f7f4ee;
+      border: 1px solid #e3ddd2;
+      border-radius: 12px;
+      padding: 16px;
+      margin-top: 18px;
+    }
+
+    .error {
+      color: #a11;
+      margin-top: 14px;
+    }
+  </style>
+</head>
+
+<body>
+<main class="card">
+
+  <div class="brand">TRUE CRIME FACTORY</div>
+
+  <div id="app">
+    Cargando...
+  </div>
+
+</main>
+
+<script type="module">
+
+import { createClient }
+from "https://esm.sh/@supabase/supabase-js@2";
+
+const supabase = createClient(
+  "https://dzsuprknwgwjymeiiwzz.supabase.co",
+  "sb_publishable_rsJnKYM7whifIjUqn5Aodw_TD0vQ3q1",
+  {
+    auth: {
+      persistSession: true,
+      autoRefreshToken: true
+    }
+  }
+);
+
+const app = document.getElementById("app");
+
+const params = new URLSearchParams(location.search);
+
+const authorizationId =
+  params.get("authorization_id");
+
+
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replace(/[&<>"']/g, c => ({
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#039;"
+    }[c]));
+}
+
+
+async function showLogin() {
+
+  app.innerHTML = `
+
+    <h1>Acceso a la Factory</h1>
+
+    <p>
+      Inicia sesión para autorizar a ChatGPT
+      a acceder a TRUE CRIME FACTORY.
+    </p>
+
+    <form id="login">
+
+      <label>Email</label>
+
+      <input
+        id="email"
+        type="email"
+        autocomplete="username"
+        required
+      >
+
+      <label>Contraseña</label>
+
+      <input
+        id="password"
+        type="password"
+        autocomplete="current-password"
+        required
+      >
+
+      <div class="actions">
+
+        <button
+          class="primary"
+          type="submit"
+        >
+          Iniciar sesión
+        </button>
+
+      </div>
+
+      <div
+        id="error"
+        class="error"
+      ></div>
+
+    </form>
+  `;
+
+
+  document
+    .getElementById("login")
+    .addEventListener(
+      "submit",
+      async event => {
+
+        event.preventDefault();
+
+        const email =
+          document
+            .getElementById("email")
+            .value
+            .trim();
+
+        const password =
+          document
+            .getElementById("password")
+            .value;
+
+        const { error } =
+          await supabase.auth
+            .signInWithPassword({
+              email,
+              password
+            });
+
+        if (error) {
+
+          document
+            .getElementById("error")
+            .textContent =
+              error.message;
+
+          return;
+        }
+
+        await start();
+
+      }
+    );
+}
+
+
+async function showConsent(user) {
+
+  if (!authorizationId) {
+
+    app.innerHTML = `
+
+      <h1>TRUE CRIME FACTORY</h1>
+
+      <p>
+        Servicio OAuth operativo.
+      </p>
+
+      <div class="box">
+        Sesión iniciada como
+        <strong>
+          ${escapeHtml(user.email)}
+        </strong>
+      </div>
+    `;
+
+    return;
+  }
+
+
+  const {
+    data,
+    error
+  } =
+    await supabase.auth.oauth
+      .getAuthorizationDetails(
+        authorizationId
+      );
+
+
+  if (error || !data) {
+
+    app.innerHTML = `
+
+      <h1>Error de autorización</h1>
+
+      <div class="error">
+        ${escapeHtml(
+          error?.message ||
+          "Solicitud OAuth inválida."
+        )}
+      </div>
+    `;
+
+    return;
+  }
+
+
+  if (
+    !("authorization_id" in data) &&
+    data.redirect_url
+  ) {
+
+    location.href =
+      data.redirect_url;
+
+    return;
+  }
+
+
+  const clientName =
+    data.client?.name ||
+    "ChatGPT";
+
+
+  const scopes =
+    (data.scope || "email")
+      .split(/\s+/)
+      .filter(Boolean);
+
+
+  app.innerHTML = `
+
+    <h1>Autorizar acceso</h1>
+
+    <p>
+      <strong>
+        ${escapeHtml(clientName)}
+      </strong>
+      solicita acceso a
+      TRUE CRIME FACTORY.
+    </p>
+
+    <div class="box">
+
+      <div>
+        <strong>Usuario:</strong>
+        ${escapeHtml(user.email)}
+      </div>
+
+      <div style="margin-top:10px">
+
+        <strong>
+          Permisos:
+        </strong>
+
+        ${scopes
+          .map(escapeHtml)
+          .join(", ")}
+
+      </div>
+
+    </div>
+
+    <p>
+      El acceso estará limitado
+      mediante las políticas RLS
+      de la Factory paralela.
+    </p>
+
+    <div class="actions">
+
+      <button
+        id="deny"
+        class="secondary"
+      >
+        Denegar
+      </button>
+
+      <button
+        id="approve"
+        class="primary"
+      >
+        Autorizar
+      </button>
+
+    </div>
+
+    <div
+      id="error"
+      class="error"
+    ></div>
+  `;
+
+
+  document
+    .getElementById("approve")
+    .onclick =
+      async () => {
+
+        const {
+          data,
+          error
+        } =
+          await supabase.auth.oauth
+            .approveAuthorization(
+              authorizationId
+            );
+
+        if (error) {
+
+          document
+            .getElementById("error")
+            .textContent =
+              error.message;
+
+          return;
+        }
+
+        location.href =
+          data.redirect_url;
+      };
+
+
+  document
+    .getElementById("deny")
+    .onclick =
+      async () => {
+
+        const {
+          data,
+          error
+        } =
+          await supabase.auth.oauth
+            .denyAuthorization(
+              authorizationId
+            );
+
+        if (error) {
+
+          document
+            .getElementById("error")
+            .textContent =
+              error.message;
+
+          return;
+        }
+
+        location.href =
+          data.redirect_url;
+      };
+
+}
+
+
+async function start() {
+
+  const {
+    data
+  } =
+    await supabase.auth
+      .getUser();
+
+
+  if (!data?.user) {
+
+    await showLogin();
+
+    return;
+  }
+
+
+  await showConsent(
+    data.user
+  );
+
+}
+
+
+await start();
+
+</script>
+
+</body>
+</html>
